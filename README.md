@@ -1,16 +1,14 @@
 # Mini Clip Builder (CLI + Frontend Web)
 
-Agora o projeto tem:
-- **Pipeline backend** para gerar mini clip de 15–20s.
-- **Frontend Streamlit** para upload via browser e visualização do resultado.
+Você pode testar localmente no navegador em **http://localhost:8501**.
 
 ## O que faz
 
-1. Recebe uma música.
-2. Detecta trecho de destaque (energia RMS + fluxo espectral).
-3. Transcreve com timestamps (Whisper).
-4. Faz matching do contexto da letra com banco de mídia (**imagem/gif/vídeo**).
-5. Sobrepõe legenda sincronizada e gera mini clip vertical.
+1. Recebe música.
+2. Detecta trecho de destaque (15–20s).
+3. Transcreve com timestamps.
+4. Faz matching de contexto da letra com banco de mídia (imagem/gif/vídeo).
+5. Gera mini clip vertical com legenda sincronizada.
 
 ## Requisitos
 
@@ -25,20 +23,29 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Frontend (browser)
+## Teste no browser (localhost)
 
 ```bash
-streamlit run app.py
+./run_local.sh
 ```
 
-No app web você pode:
-- enviar a música,
-- enviar banco de mídia (jpg/png/webp/gif/mp4/mov/webm/mkv),
-- editar tags por arquivo,
-- processar,
-- ver preview e baixar o resultado.
+ou
 
-## Uso via CLI
+```bash
+streamlit run app.py --server.address 0.0.0.0 --server.port 8501
+```
+
+Depois abra: `http://localhost:8501`
+
+## Fluxo no frontend
+
+- Upload de música
+- Upload de banco de mídia (`jpg`, `png`, `webp`, `gif`, `mp4`, `mov`, `webm`, `mkv`)
+- Edição de tags sugeridas automaticamente por nome de arquivo
+- Processamento e preview do resultado
+- Download do mini clip
+
+## Uso CLI
 
 ```bash
 python clip_prototype.py \
@@ -49,19 +56,4 @@ python clip_prototype.py \
   --language pt \
   --target-seconds 18 \
   --whisper-model small
-```
-
-### Exemplo metadata.json
-
-```json
-{
-  "praia_sunset.jpg": {
-    "caption": "praia no fim de tarde",
-    "tags": ["praia", "sol", "calma"]
-  },
-  "cidade_noite.mp4": {
-    "caption": "cidade molhada de chuva",
-    "tags": ["cidade", "noite", "chuva"]
-  }
-}
 ```
