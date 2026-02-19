@@ -1,20 +1,21 @@
-# Protótipo funcional: mini clip automático (15–20s)
+# Mini Clip Builder (CLI + Frontend Web)
 
-Este projeto gera um mini clip curto a partir de uma música, com seleção automática de trecho de destaque, legenda sincronizada e imagens escolhidas por contexto da letra.
+Agora o projeto tem:
+- **Pipeline backend** para gerar mini clip de 15–20s.
+- **Frontend Streamlit** para upload via browser e visualização do resultado.
 
-## O que o pipeline faz
+## O que faz
 
-1. **Identifica o trecho “alto”** da faixa (energia RMS + fluxo espectral).
-2. **Recorta 15–20s** do áudio nesse trecho.
-3. **Transcreve** o trecho com timestamps por palavra (`faster-whisper`).
-4. **Quebra as legendas** em blocos curtos sincronizados.
-5. **Seleciona imagens** por similaridade textual entre letra e metadados do banco de imagens.
-6. **Renderiza um mini clip** vertical `1080x1920` com áudio + legenda.
+1. Recebe uma música.
+2. Detecta trecho de destaque (energia RMS + fluxo espectral).
+3. Transcreve com timestamps (Whisper).
+4. Faz matching do contexto da letra com banco de mídia (**imagem/gif/vídeo**).
+5. Sobrepõe legenda sincronizada e gera mini clip vertical.
 
 ## Requisitos
 
 - Python 3.10+
-- `ffmpeg` no sistema
+- ffmpeg no sistema
 
 ## Instalação
 
@@ -24,35 +25,25 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## Estrutura de imagens
+## Frontend (browser)
 
-```text
-assets/images/
-  praia_por_do_sol.jpg
-  cidade_chuva.png
+```bash
+streamlit run app.py
 ```
 
-`metadata.json` (opcional):
+No app web você pode:
+- enviar a música,
+- enviar banco de mídia (jpg/png/webp/gif/mp4/mov/webm/mkv),
+- editar tags por arquivo,
+- processar,
+- ver preview e baixar o resultado.
 
-```json
-{
-  "praia_por_do_sol.jpg": {
-    "caption": "praia no fim de tarde",
-    "tags": ["sol", "mar", "calma"]
-  },
-  "cidade_chuva.png": {
-    "caption": "cidade com chuva à noite",
-    "tags": ["noite", "triste", "rua"]
-  }
-}
-```
-
-## Uso
+## Uso via CLI
 
 ```bash
 python clip_prototype.py \
   --song ./musica.mp3 \
-  --images ./assets/images \
+  --media ./assets/media \
   --metadata ./metadata.json \
   --output ./mini_clip.mp4 \
   --language pt \
@@ -60,8 +51,17 @@ python clip_prototype.py \
   --whisper-model small
 ```
 
-## Notas
+### Exemplo metadata.json
 
-- O alvo de duração é sempre limitado para **15..20 segundos**.
-- Sem metadados, o matching usa apenas o nome dos arquivos.
-- Para maior velocidade, use `--whisper-model tiny` ou `base`.
+```json
+{
+  "praia_sunset.jpg": {
+    "caption": "praia no fim de tarde",
+    "tags": ["praia", "sol", "calma"]
+  },
+  "cidade_noite.mp4": {
+    "caption": "cidade molhada de chuva",
+    "tags": ["cidade", "noite", "chuva"]
+  }
+}
+```
