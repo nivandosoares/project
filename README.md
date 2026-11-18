@@ -1,5 +1,13 @@
 # Mini Clip Builder (CLI + Frontend Web)
 
+Protótipo em Python com aplicação local e fluxo experimental de criação de clipes.
+
+**Arquivos principais**
+
+- [app.py](<app.py>)
+- [clip_prototype.py](<clip_prototype.py>)
+- [run_local.sh](<run_local.sh>)
+
 Você pode testar localmente no navegador em **http://localhost:8501**.
 
 ## O que faz
